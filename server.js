@@ -14,6 +14,8 @@ app.use(express.json());
 const mongoose = require("mongoose");
 let productsModal;
 
+main().catch((err) => console.log(err));
+
 async function main() {
   await mongoose.connect(process.env.MONGO_DB);
   const productSchema = new mongoose.Schema({
@@ -24,22 +26,9 @@ async function main() {
   });
 
   productsModal = mongoose.model("products", productSchema);
-  //   seedData()
 }
 
-main().catch((err) => console.log(err));
 
-// async function seedData() {
-
-//     const codeComplete = new productsModal({
-//         name: 'panda',
-//         packageSize: '10ml',
-//         price: '10',
-//         localMade: true,
-//     });
-
-//     await codeComplete.save();
-//   }
 
 app.get("/", (request, response) => {
   response.send("test request received");
@@ -60,7 +49,6 @@ function getAll(req, res) {
 app.post("/addproduct", addProduct);
 
 async function addProduct(req, res) {
-  console.log(req.body);
   const { name, packageSize, price, localMade } = req.body;
 
   await productsModal.create({
@@ -79,6 +67,19 @@ async function addProduct(req, res) {
   });
 }
 
+app.delete("/deleteproduct/:id", deleteProduct);
 
+function deleteProduct(req, res) {
+  let productId = req.params.id;
+  productsModal.deleteOne({ _id: productId }, (err, result) => {
+    productsModal.find({ __v: 0 }, (err, result) => {
+      if (err) {
+        console.log(err);
+      } else {
+        res.send(result);
+      }
+    });
+  });
+}
 
 app.listen(PORT, () => console.log(`listening on ${PORT}`));
