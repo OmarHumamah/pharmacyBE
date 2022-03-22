@@ -11,6 +11,7 @@ const PORT = process.env.PORT;
 
 app.use(express.json());
 
+//................... connect Mongo DB to the API ..................
 const mongoose = require("mongoose");
 let productsModal;
 
@@ -29,11 +30,14 @@ async function main() {
 }
 
 
+//................... the routes and the handlers ..................
 
+//................... API test route ..................
 app.get("/", (request, response) => {
   response.send("test request received");
 });
 
+//................... send all products ..................
 app.get("/getall", getAll);
 
 function getAll(req, res) {
@@ -46,6 +50,7 @@ function getAll(req, res) {
   });
 }
 
+//................... Add product ..................
 app.post("/addproduct", addProduct);
 
 async function addProduct(req, res) {
@@ -67,6 +72,7 @@ async function addProduct(req, res) {
   });
 }
 
+//................... delete product ..................
 app.delete("/deleteproduct/:id", deleteProduct);
 
 function deleteProduct(req, res) {
@@ -82,4 +88,6 @@ function deleteProduct(req, res) {
   });
 }
 
+
+//................... start the API server ..................
 app.listen(PORT, () => console.log(`listening on ${PORT}`));
