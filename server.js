@@ -7,7 +7,9 @@ const cors = require("cors");
 const app = express();
 app.use(cors());
 
-const PORT = process.env.PORT;
+// dote env tool is to secure the important info put I share it here to allow you to run the server on your local machine
+const PORT = process.env.PORT || 3031;
+const mongoDB = "mongodb://Omar_Humamah:123Omar321@omarcluster-shard-00-00.reqod.mongodb.net:27017,omarcluster-shard-00-01.reqod.mongodb.net:27017,omarcluster-shard-00-02.reqod.mongodb.net:27017/pharmacy-product?ssl=true&replicaSet=atlas-104q19-shard-0&authSource=admin&retryWrites=true&w=majority"
 
 app.use(express.json());
 
@@ -18,7 +20,7 @@ let productsModal;
 main().catch((err) => console.log(err));
 
 async function main() {
-  await mongoose.connect(process.env.MONGO_DB);
+  await mongoose.connect(process.env.MONGO_DB || mongoDB);
   const productSchema = new mongoose.Schema({
     name: String,
     packageSize: String,
